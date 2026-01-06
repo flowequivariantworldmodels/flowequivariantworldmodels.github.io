@@ -17,6 +17,14 @@ body {
   font-variant: small-caps;
 }
 
+.affil-logo {
+  height: 2.5em;           /* matches text height */
+  width: auto;
+  vertical-align: -0.8em; /* nudges it down a bit to align */
+  margin-right: 0.1em;  /* space between logo and text */
+  margin-left: 0.2em;  /* space between logo and text */
+}
+
 
 .teaser .hero-body {
   padding-top: 0;
