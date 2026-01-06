@@ -121,7 +121,7 @@
               <!-- PDF Link. -->
               <!-- TODO: Insert pdf link here -->
               <span class="link-block">
-                <a href="https://arxiv.org/pdf/2011.12948"
+                <a href="https://arxiv.org/pdf/2601.01075"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -131,7 +131,7 @@
               </span>
               <!-- TODO: Insert abs link here -->
               <span class="link-block">
-                <a href="https://arxiv.org/abs/2011.12948"
+                <a href="https://arxiv.org/abs/2601.01075"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -156,7 +156,7 @@
                   <span class="icon">
                       <i class="fab fa-github"></i>
                   </span>
-                  <span>Code</span>
+                  <span>Code (coming soon!)</span>
                   </a>
               </span>
               <!-- TODO: Insert code for dataset link here -->
@@ -167,7 +167,7 @@
                   <span class="icon">
                       <i class="far fa-images"></i>
                   </span>
-                  <span>Data</span>
+                  <span>Data (coming soon!)</span>
                   </a>
             </div>
 
@@ -259,7 +259,6 @@
 
 
 
-
 <section class="section">
   <div class="container is-max-desktop">
     <!-- Abstract. -->
@@ -312,10 +311,10 @@
 <section class="section">
   <div class="container is-max-desktop">
 
-    <div class="columns is-centered">
+    <!-- <div class="columns is-centered"> -->
 
       <!-- Visual Effects. -->
-      <div class="column">
+      <!-- <div class="column">
         <div class="content">
           <h2 class="title is-3">Visual Effects</h2>
           <p>
@@ -327,11 +326,11 @@
                     type="video/mp4">
           </video>
         </div>
-      </div>
+      </div> -->
       <!--/ Visual Effects. -->
 
       <!-- Matting. -->
-      <div class="column">
+      <!-- <div class="column">
         <h2 class="title is-3">Matting</h2>
         <div class="columns is-centered">
           <div class="column content">
@@ -346,25 +345,51 @@
           </div>
 
         </div>
-      </div>
-    </div>
+      </div> -->
+    <!-- </div> -->
     <!--/ Matting. -->
 
     <!-- Animation. -->
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">Animation</h2>
+        <h2 class="title is-3">FloWM Model</h2>
 
-        <!-- Interpolating. -->
-        <h3 class="title is-4">Interpolating states</h3>
+        <!-- Model comparison. -->
+        <h3 class="title is-4">Model Comparison</h3>
         <div class="content has-text-justified">
           <p>
-            We can also animate the scene by interpolating the deformation latent codes of two input
-            frames. Use the slider here to linearly interpolate between the left frame and the right
-            frame.
+            Comparison between different world modeling frameworks. a) Standard diffusion forcing uses a fixed length sliding window to generate video autoregressively. Frames must be evicted if they 
+        exceed the window. b) When there are information dependencies between past observations and the generated frame, without a memory mechanism, DFoT is not
+        able to generate consistently. c) Existing memory solutions are view-dependent, and cannot handle dynamic scenes, still resulting in inconsistent generation. d) In FloWM, past frames are 
+        remembered in the spatial latent memory and continually updated through FloWM's internal dynamics, resulting in consistent generation. 
           </p>
         </div>
-        <div class="columns is-vcentered interpolation-panel">
+
+        <div class="col-auto">
+          <br>
+        <div style="text-align: center;"><img src='./static/images/flowm_model_comparisons.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
+        </div>
+
+        <br>
+        <br>
+
+
+        <!-- Model diagram -->
+        <h3 class="title is-4">FloWM Model Diagram</h3>
+        <div class="content has-text-justified">
+          <p>
+            FloWM Recurrence relation in 3D. a) Information passes from the image observations to the hidden state through a ViT encoder. b) The new updates are combined with the existing hidden state, and 
+        the action and internal flows roll the hidden state to the next timestep. c) The updated hidden state is used to predict the next timestep observation.
+          </p>
+        </div>
+
+        <div class="col-auto">
+          <br>
+        <div style="text-align: center;"><img src='./static/images/flowm_3d_model.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
+        </div>
+
+
+        <!-- <div class="columns is-vcentered interpolation-panel">
           <div class="column is-3 has-text-centered">
             <img src="./static/images/interpolate_start.jpg"
                  class="interpolation-image"
@@ -385,12 +410,12 @@
                  alt="Interpolation end reference image."/>
             <p class="is-bold">End Frame</p>
           </div>
-        </div>
+        </div> -->
         <br/>
         <!--/ Interpolating. -->
 
         <!-- Re-rendering. -->
-        <h3 class="title is-4">Re-rendering the input video</h3>
+        <!-- <h3 class="title is-4">Re-rendering the input video</h3>
         <div class="content has-text-justified">
           <p>
             Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
@@ -407,7 +432,7 @@
             <source src="./static/nerfies_videos/replay.mp4"
                     type="video/mp4">
           </video>
-        </div>
+        </div> -->
         <!--/ Re-rendering. -->
 
       </div>
@@ -446,16 +471,18 @@
 </section>
 
 
-<!-- TODO: Update bibtex here -->
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{park2021nerfies,
-  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
-  title     = {Nerfies: Deformable Neural Radiance Fields},
-  journal   = {ICCV},
-  year      = {2021},
-}</code></pre>
+    <pre><code>@misc{lillemark2026flowequivariantworldmodels,
+      title={Flow Equivariant World Models: Memory for Partially Observed Dynamic Environments}, 
+      author={Hansen Jin Lillemark and Benhao Huang and Fangneng Zhan and Yilun Du and Thomas Anderson Keller},
+      year={2026},
+      eprint={2601.01075},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2601.01075}, 
+    }</code></pre>
   </div>
 </section>
 
