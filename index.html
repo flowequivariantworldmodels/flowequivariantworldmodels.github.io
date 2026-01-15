@@ -298,22 +298,29 @@
   <div class="container is-max-desktop">
     <div class="hero-body">
 
-      <video controls autoplay muted loop id="teaser" playsinline
-            style="width: 100%; height: auto; max-height: 700px; object-fit: contain;">
-        <!-- <source src="./static/videos/teaser.mov" type="video/mp4"> -->
-        <source src="./static/videos/website_explained_pane1.mov" type="video/mp4">
-      </video>
-        <video controls autoplay muted loop id="teaser" playsinline
-            style="width: 100%; height: auto; max-height: 700px; object-fit: contain;">
-        <!-- <source src="./static/videos/teaser.mov" type="video/mp4"> -->
-        <source src="./static/videos/website_explained_pane2.mov" type="video/mp4">
-      </video>
+      <div style="max-width: 750px; margin: 0 auto;">
+        <video controls autoplay muted loop playsinline
+          style="width: 100%; height: auto; max-height: 520px; object-fit: contain; display: block;">
+          <source src="./static/videos/website_explained_pane1.mov" type="video/mp4">
+        </video>
+      </div>
+
+      <div style="max-width: 750px; margin: 16px auto 0;">
+        <video controls autoplay muted loop playsinline
+          style="width: 100%; height: auto; max-height: 520px; object-fit: contain; display: block;">
+          <source src="./static/videos/website_explained_pane2.mov" type="video/mp4">
+        </video>
+      </div>
+
       <h2 class="subtitle has-text-centered">
         Flow Equivariant World Models (FloWM) predict 3D dynamics in partially observable environments by maintaining a 
         latent memory map equivariant to external motion (flows) and self-motion (agent movement).
+      </h2>
+
     </div>
   </div>
 </section>
+
 
 
 
