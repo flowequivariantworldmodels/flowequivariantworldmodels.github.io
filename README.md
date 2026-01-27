@@ -4,12 +4,15 @@ This is the repository that contains source code for the [Flow Equivariant World
 
 If you find Flow Equivariant World Models useful for your work please cite:
 ```
-@article{park2021nerfies
-  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
-  title     = {Nerfies: Deformable Neural Radiance Fields},
-  journal   = {ICCV},
-  year      = {2021},
-}
+@misc{lillemark2026flowequivariantworldmodels,
+      title={Flow Equivariant World Models: Memory for Partially Observed Dynamic Environments}, 
+      author={Hansen Jin Lillemark and Benhao Huang and Fangneng Zhan and Yilun Du and Thomas Anderson Keller},
+      year={2026},
+      eprint={2601.01075},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2601.01075}, 
+    }
 ```
 
 # Website License
