@@ -707,6 +707,75 @@
 </section>
 
 
+
+<hr class="section-divider">
+
+<section class="section" id="model-2d">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Activation Probe Experiments</h2>
+
+        <!-- Model diagram -->
+        <!-- <h3 class="title is-4">FloWM Model Diagram</h3> -->
+        <div class="content has-text-justified">
+          <p>
+            We train simple probe models on the activation spaces of FloWM and baselines on Dynamic Block World to see whether the representation 
+            readiliy contains the position of each block at each timestep. a) FloWM can make practically perfect predictions, even while the agent 
+            is moving around and the blocks are moving. This demonstrates the accuracy of the learned latent space. b) The DFoT baseline makes sporadic
+            predictions of each of the blocks, demonstrating its unprincipled representation space.
+          </p>
+        </div>
+
+        <div class="col-auto">
+          <br>
+        <div style="text-align: center;"><img src='./static/images/top_down_probe_combined.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
+        </div>
+
+        <div class="toggle-container">
+          <div class="toggle-header" role="button" tabindex="20" aria-expanded="false">
+            <span class="arrow">▶</span>
+            Additional visualization of the probe rollout over time
+          </div>
+          <div class="toggle-content">
+            <div class="content has-text-justified">
+              <p>
+                The same example rollout of predicted spatial positions by the probe models in Dynamic Block World is visualized here as a prediction 
+                through time. a) FloWM can make predictions accurately through time, while b) DFoT cannot.
+              </p>
+            </div>
+    
+            <div class="col-auto">
+              <br>
+            <div style="text-align: center;"><img src='./static/images/x_and_z_probe_combined.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
+            </div>
+            
+            
+          </div>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="content has-text-justified">
+          <p>
+            We find that the probe can accurately predict the correct block position ~96% of the time for FloWM, while the accuracy prediction of the probe is 
+            less than 1% for DFoT. Further, the L2 distance between predicted positions, which can be seen as a proxy for testing whether the FloWM model has
+            learned to be flow equivariant, is significantly lower (0.22) for FloWM, while remaining high for DFoT (2.36, much better than an untrained model 
+            at 6.96, but significantly worse than FloWM). See the paper for more details!
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
 <hr class="section-divider">
 
 
