@@ -40,6 +40,18 @@
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
   <script src="./static/js/index.js"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
   <script>
     function setExpanded(el, isOpen) {
@@ -101,7 +113,7 @@
       align-items: center;
       gap: 8px;
       user-select: none;
-      color: #17452c;
+      color: #22633f;
       background: #f3faf6;
       border: 1px solid #9fc5ad;
       border-radius: 999px;
@@ -138,6 +150,97 @@
     .overview-links a:hover {
       text-decoration: underline;
     }
+
+    .resource-links a {
+      color: #22633f !important;
+      font-weight: 700;
+    }
+
+    .resource-links a:hover {
+      text-decoration: underline;
+    }
+
+    .compact-footer {
+      padding-bottom: 1.5rem;
+    }
+
+    .compact-footer .columns,
+    .compact-footer .content {
+      margin-bottom: 0;
+    }
+
+    .footer-attribution {
+      margin-top: 1.5rem;
+    }
+
+    .resource-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .resource-card {
+      display: block;
+      padding: 18px 16px;
+      text-align: center;
+      color: #22633f !important;
+      font-weight: 700;
+      background: #f3faf6;
+      border: 1px solid #c9dfd1;
+      border-radius: 14px;
+      box-shadow: 0 1px 5px rgba(34, 99, 63, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .resource-card:hover {
+      color: #0f3320 !important;
+      border-color: #5f9a75;
+      box-shadow: 0 4px 12px rgba(34, 99, 63, 0.14);
+      text-decoration: none !important;
+      transform: translateY(-2px);
+    }
+
+    @media screen and (max-width: 700px) {
+      .resource-card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .emphasis-question {
+      color: #22633f;
+      font-weight: 900;
+      text-shadow: 0 0 0 currentColor;
+    }
+
+    .pseudocode-block {
+      box-sizing: border-box;
+      max-width: 100%;
+      width: 100%;
+      margin: 1rem auto;
+      padding: 1.25em 1.5em;
+      background-color: whitesmoke;
+      border-radius: 6px;
+      color: #4a4a4a;
+      font-family: monospace;
+      font-size: 0.875em;
+      text-align: left;
+      overflow-wrap: break-word;
+    }
+
+    .pseudocode-line {
+      margin: 0;
+    }
+
+    .pseudocode-step {
+      margin: 0;
+      padding-left: 1.5em;
+      text-indent: -1.5em;
+    }
+
+    .rollout-caption {
+      font-style: normal !important;
+    }
   
     .toggle-header .arrow {
       transition: transform 0.2s ease;
@@ -163,7 +266,7 @@
 
 
 </head>
-<body>
+<body id="top">
 
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
@@ -381,7 +484,7 @@
             reveals only a fraction of the world, while unobserved regions continue to evolve. 
           </p>
           <p>
-            In this work, we introduce Flow Equivariant World Modeling, a framework that leverages time-parameterized symmetries 
+            In this work, we introduce Flow Equivariant World Modeling (FloWM), a framework that leverages time-parameterized symmetries
             within a latent memory for stable and accurate dynamics prediction over long horizons. The latent memory shifts and 
             transforms equivariantly with self-motion and inferred external object motion, keeping information about out-of-view 
             regions aligned as time progresses. We demonstrate the advantage of this framework over state-of-the-art diffusion, 
@@ -394,10 +497,9 @@
 
         <div class="content has-text-centered is-size-5 overview-links">
             <p>
-            Below, we overview the <a href="#model-comparison">FloWM model comparison</a>, the <a href="#model-3d">3D FloWM model</a>,
-            present <a href="#results-3d-blockworld">3D Blockworld results</a>, and
-            <a href="#results-2d-mnist">2D MNIST World results</a>.
-            <!-- Optional: add , and <a href="#BibTeX">BibTeX</a>. -->
+            Below, we present <a href="#model-comparison">baseline model comparisons</a>, <a href="#preliminaries">an introduction to Flow Equivariance</a>,
+            <a href="#model-2d">the FloWM architecture</a>, <a href="#results-3d-blockworld">world modeling results</a>, and
+            <a href="#planning-experiment">downstream planning results</a>.
           </p>
         </div>
         
@@ -428,13 +530,25 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h3 class="title is-4">Model Comparison</h3>
+        <h3 class="title is-4">Baseline Model Comparisons</h3>
         <div class="content has-text-justified">
           <p>
-            Comparison between different world modeling frameworks: a) Standard diffusion forcing uses a fixed length sliding window to generate video autoregressively. Frames must be evicted if they
-            exceed the window. b) When there are information dependencies between past observations and the generated frame, without a memory mechanism, DFoT is not
-            able to generate consistently. c) Existing memory solutions are view-dependent, and cannot handle dynamic scenes, still resulting in inconsistent generation. d) In FloWM, past frames are
-            remembered in the spatial latent memory and continually updated through FloWM's internal dynamics, resulting in consistent generation.
+            <strong class="emphasis-question">
+              Why don't current world models have the capability for long horizon dynamic memory?
+            </strong>
+            </p>
+            <p>
+              a) Generating video autoregressively with a sliding window using a standard diffusion forcing setup (DFoT) means that frames must be evicted once they exceed the maximum window size.
+            </p>
+            <p>
+              b) When there are information dependencies between past observations and the generated frame, these sliding window approaches without memory fail.
+            </p>
+            <p>
+              c) Existing memory solutions (e.g. DFoT-SSM) are viewpoint-dependent, and intended for static scenes. Under a more realistic dynamic scene, these approaches also fall short.
+            </p>
+            <p>
+              d) In FloWM, past frames are remembered in the spatial latent memory and continually updated through FloWM's internal dynamics, resulting in consistent generation.
+            </p>
           </p>
         </div>
 
@@ -455,11 +569,42 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h3 class="title is-4">Preliminaries</h3>
+        <h3 class="title is-4">An Introduction to Flow Equivariance</h3>
         <div class="content has-text-justified">
           <p>
-            TODO: Add text block about equivariance.
+
+            <strong class="emphasis-question">We leverage a property called Flow Equivariance to build a latent memory that shifts along with the dynamics of the world.</strong>
+             FloWM utilizes this latent memory that remains consistent through time for predicting future observations.
           </p>
+          <p>
+            <strong class="emphasis-question">Equivariant Networks</strong>
+            are built to satisfy the following property: when a group transformation $g$ is applied to an input $f$ before passing it into a model $\phi$, it is equivalent to applying an analogous
+            transformation to the output of the model when we use the original input. These networks are known to improve training efficiency and generalization ability of networks when the transformation
+            structure of the data and model align:
+            $$\phi(g \cdot f) = g \cdot \phi(f)$$
+          </p>
+          <p>
+            We define a <strong class="emphasis-question">flow</strong> as a time-parameterized sequence transformation. The flow $\psi_t$ represents an element in a transformation group; for example
+            it could represent a change in position after moving with some velocity $\nu$ for $t$ timesteps:
+            $$\psi_t(\nu) \in G$$
+          </p>
+          <p>
+            <strong class="emphasis-question">Flow Equivariance</strong> combines these two definitions to say: if an input sequence transforms according to a flow,
+            then the output of our network should also transform, or flow, analogously. This differs from standard equivariance because it is additional defined over the time dimension.
+            For a sequence model $\Phi$, temporal input $f_0,...,f_T$ and temporal output $y_0, ..., y_T$:
+            $$
+            \Phi(\psi_0(\nu) \cdot f_0, ..., \psi_T(\nu) \cdot f_T) = (\psi_0(\nu) \cdot y_0, ..., \psi_T(\nu) \cdot y_T)
+            $$
+          </p>
+          <p>
+            To represent moving objects within a latent memory, we incorporate this property in a <strong class="emphasis-question">general recurrent framework</strong>. The hidden state $h_t$ at each timestep represents the latent memory, with additional
+            'velocity channels' that can flow with time. Each velocity channel $\nu$ is updated according to its internal flow transform when transitioning from $t$ to $t+1$ by applying $\psi_1(\nu)$. Intuitively,
+            this enables a latent spatial memory that flows in time; the neural network learns through training to place information from observations into the correct velocity channel to match the world's dynamics.
+            Additionally, there is a self-action transformation, which shifts all the velocity channels in the latent memory corresponding to what action it is (e.g. turn left, move forward, etc.):
+          </p>
+          <div style="text-align: center">
+            <img src="./static/images/general_flowm_equation.png" style="max-width: 100%; height: auto;" width="400" alt="General FloWM recurrent equation" />
+          </div>
         </div>
       </div>
     </div>
@@ -474,18 +619,18 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h3 class="title is-4">2D FloWM Model Diagram</h3>
+        <h3 class="title is-4">2D Flow Equivariant World Model Instantiation</h3>
         <div class="content has-text-justified">
           <p>
-            a) FloWM Recurrence relation in 2D. Velocity channels are plotted as rows. At each timestep, the internal flow and action flow compose and act upon the latent memory map representation,
-            which is used to predict the observation at the next timestep. b) Rollout error over time, for FloWM and ablations, and baselines. c) Training loss across batches, demonstrating how the
-            full equivariance allows the model to learn significantly quicker.
+
+            We first introduce the instantiation of the recurrence relation in 2D. Starting from a world state at time $t$, we have a windowed partial observation $f_t$. The objective is to predict $f_{t+1}$ using action $a_t$.
+            The digits are each moving with a different velocity, which our model separates out into different 'velocity channels', depicted as stacked hidden states. Each velocity channel has its own
+            internal flow $\psi_1(\nu)$ applied, along with the global action flow, to update the hidden state. The hidden state is then read out to successfully predict what the next observation will be.
           </p>
         </div>
 
         <div class="col-auto">
-          <br>
-          <div style="text-align: center;"><img src='./static/images/model.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+          <div style="text-align: center;"><img src='./static/images/flowm_2d_model.png' style="max-width: 50%; height: auto;" width="900" alt='missing' /></div>
         </div>
       </div>
     </div>
@@ -500,17 +645,21 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h3 class="title is-4">3D FloWM Model Diagram</h3>
+        <h3 class="title is-4">3D Flow Equivariant World Model Instantiation</h3>
         <div class="content has-text-justified">
           <p>
-            FloWM Recurrence relation in 3D: a) Information passes from the image observations to the hidden state through a ViT encoder. b) The new updates are combined with the existing hidden state, and
-            the action and internal flows roll the hidden state to the next timestep. c) The updated hidden state is used to predict the next timestep observation.
+            In 3D, the instantiation follows a similar intuition, but now the spatial memory is a top-down map, and the model must learn to convert projected image observations into the world space.
+            We use a more powerful ViT encoder to handle this unprojection implicitly, but the framework is similar: the representation is updated, an internal flow and action are applied to shift the latent
+            representation, and then that updated representation is used to predict the next observation. There are still velocity channels that now represent the velocity of the blocks the agent has observed
+            while it has moved around the environment. Unlike the 2D model, the 3D model is not analytically equivaraint, but we find the encoder learns to follow this in practice (see <a href="#equivariance-probe-experiment" style="color: #22633f;">probe section</a>).
           </p>
         </div>
 
         <div class="col-auto">
           <br>
-          <div style="text-align: center;"><img src='./static/images/flowm_3d_model.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+          <div style="text-align: center;">
+            <img src='./static/images/flowm_3d_model.png' style="max-width: 80%; height: auto;" width="900" alt='missing'/>
+          </div>
         </div>
       </div>
     </div>
@@ -525,18 +674,44 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h3 class="title is-4">3D Blockworld Results</h3>
+        <h3 class="title is-4">3D Block World Prediction Results</h3>
 
         <div class="content has-text-justified">
           <p>
-            Below we provide full rollouts on the Dynamic, Textured, and Static splits of the 3D Blockworld Dataset.
+            <strong class="emphasis-question">On a challenging 3D Dynamic dataset, FloWM achieves consistent rollouts for action-conditioned world modeling with its dynamic latent memory, whereas baselines hallucinate and diverge.</strong>
+          </p>
+          <p>
+            Block World is instantiated with blocks at different velocities, and the agent makes observations
+            by moving around the environment. We train the 3D model to predict future observations given previous observations and actions. Below, we provide full prediction rollouts on the
+            Dynamic and Textured (with different random textures on the walls and shapes) splits of the dataset.
+            We also visualize the DFoT and DFoT-SSM baselines, which represent standard and memory-augmented diffusion-based world models respectively.
+            As we can see, the diffusion-based models hallucinate blocks frequently, while FloWM is able to stay
+            consistent, even when the prediction horizon (210 future frames) greatly exceeds what the model saw during training.
+            Video artifacts in the baselines arise due to an inability to represent the scene well using autoregressive rollouts; please see the paper for more details.
           </p>
         </div>
 
         <div style="text-align: center; margin-top: 28px">
           <figure style="text-align:center;">
             <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-              Textured Dynamic Blockworld Rollout #1
+              Dynamic Block World Rollout #1
+            </figcaption>
+            <video
+              controls
+              autoplay
+              muted
+              loop
+              width="900"
+              style="max-width:100%; height:auto;"
+              src="./static/videos/teaser.mov"
+            ></video>
+          </figure>
+        </div>
+
+        <div style="text-align: center; margin-top: 28px">
+          <figure style="text-align:center;">
+            <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+              Textured Dynamic Block World Rollout #1
             </figcaption>
             <video
               controls
@@ -560,14 +735,14 @@
             <div class="toggle-container">
               <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
                 <span class="arrow">▶</span>
-                Additional Textured Dynamic Blockworld Rollouts
+                Additional Textured Dynamic Block World Rollouts
               </div>
 
               <div class="toggle-content">
                 <div style="text-align: center; margin-top: 28px">
                   <figure style="text-align:center;">
                     <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-                      Textured Dynamic Blockworld Rollout #2
+                      Textured Dynamic Block World Rollout #2
                     </figcaption>
                     <video
                       controls
@@ -584,7 +759,7 @@
                 <div style="text-align: center; margin-top: 28px">
                   <figure style="text-align:center;">
                     <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-                      Textured Dynamic Blockworld Rollout #3
+                      Textured Dynamic Block World Rollout #3
                     </figcaption>
                     <video
                       controls
@@ -603,27 +778,10 @@
             <div class="toggle-container">
               <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
                 <span class="arrow">▶</span>
-                Dynamic Blockworld Rollouts
+                Additional Dynamic Block World Rollouts
               </div>
 
               <div class="toggle-content">
-                <div style="text-align: center; margin-top: 28px">
-                  <figure style="text-align:center;">
-                    <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-                      3D Dynamic Block World Rollout #1
-                    </figcaption>
-                    <video
-                      controls
-                      autoplay
-                      muted
-                      loop
-                      width="900"
-                      style="max-width:100%; height:auto;"
-                      src="./static/videos/teaser.mov"
-                    ></video>
-                  </figure>
-                </div>
-
                 <div style="text-align: center; margin-top: 28px">
                   <figure style="text-align:center;">
                     <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
@@ -657,18 +815,48 @@
                     ></video>
                   </figure>
                 </div>
+
               </div>
             </div>
 
             <div class="toggle-container">
               <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
                 <span class="arrow">▶</span>
-                Dynamic Blockworld Rollouts with Varying PSNR
+                Dreamer V3 RSSM Comparison
+              </div>
+
+              <div class="toggle-content">
+                <div style="text-align: center; margin-top: 28px">
+                  <figure style="text-align:center;">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                      RSSM Block World Rollout
+                    </figcaption>
+                    <video
+                      controls
+                      autoplay
+                      muted
+                      loop
+                      width="900"
+                      style="max-width:40%; height:auto;"
+                      src="./static/videos/blockworld_rollouts/rssm_400m_rollout.mp4"
+                    ></video>
+                  </figure>
+                  <p style="font-size: 16px; text-align: center; margin: 8px auto 0; max-width: 900px;">
+                    A Dreamer V3-style RSSM is not able to keep coherent predictions, and instead predicts a dataset average. This provides evidence that structured memory representations are necessary for maintaining coherence in a recurrent framework.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="toggle-container">
+              <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
+                <span class="arrow">▶</span>
+                Dynamic Block World Rollouts with Varying PSNR
               </div>
 
               <div class="toggle-content">
                 <p style="font-size: 16px; text-align:center; margin-top: 4px;">
-                  We visualize failure cases of our model, in comparison to DFoT and DFoT SSM by visualizing low PSNR rollouts:
+                  We visualize failure cases of our model, in comparison to DFoT and DFoT-SSM by visualizing low PSNR rollouts:
                 </p>
                 <br>
 
@@ -703,7 +891,7 @@
                 <div class="row pt-4 pb-3 justify-content-center">
                   <div class="col-auto">
                     <figcaption style="font-size:20px; font-weight:bold; margin-top:20px;">
-                        Rollout Visualization on Dynamic Textured Blockworld.
+                        Rollout Visualization on Dynamic Textured Block World.
                     </figcaption>
                     <br>
                     <div style="text-align: center;"><img src='./static/images/blockworld_tex_rollouts.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
@@ -711,20 +899,20 @@
                 </div>
 
                 <div class="col" style="text-align: center; max-width: 900px; margin: 0 auto; margin-top: 16px">
-                  Note that FloWM remains consistent while SSM and DFoT hallucinate.
+                  Note that FloWM remains consistent while DFoT and DFoT-SSM hallucinate.
                 </div>
 
                 <div class="row pt-4 pb-3 justify-content-center">
                   <div class="col-auto">
                     <figcaption style="font-size:20px; font-weight:bold; margin-top:20px;">
-                        Rollout Visualization on Dynamic Blockworld.
+                        Rollout Visualization on Dynamic Block World.
                     </figcaption>
                     <br>
                     <div style="text-align: center;"><img src='./static/images/blockworld_dynamic_rollouts.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
                   </div>
                 </div>
                 <div class="col" style="text-align: center; max-width: 900px; margin: 0 auto; margin-top: 16px">
-                  Note that FloWM remains consistent while SSM and DFoT hallucinate. Ablations also begin predicting poor visual results.
+                  Note that FloWM remains consistent while DFoT and DFoT-SSM hallucinate. FloWM ablations also begin predicting poor visual results.
                 </div>
               </div>
             </div>
@@ -732,7 +920,7 @@
             <div class="toggle-container">
               <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
                 <span class="arrow">▶</span>
-                Blockworld Results Tables
+                Block World Results Tables
               </div>
 
               <div class="toggle-content">
@@ -771,11 +959,75 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h3 class="title is-4">Planning Experiment</h3>
+        <h3 class="title is-4">Downstream Planning Experiment in the 3D Block World Environment</h3>
         <div class="content has-text-justified">
           <p>
-            TODO: Add text block about planning expt.
+            <strong class="emphasis-question">FloWM's consistent world model can be utilized for downstream planning tasks without additional training.</strong>
           </p>
+          <p>
+            On a simple planning task in the same Block World environment, 'Find the red block', we use a simple MPC-like framework to search over optimal actions to maximize the number of red pixels on the screen. Due to the hallucinations of the baseline models, the action sequences
+            they choose do not align with the real reward in the environment. Meanwhile, FloWM reliably selects actions that move the agent toward the optimal stopping position, two positions away from the red block.
+          </p>
+          <div style="text-align: center;">
+            <img src="./static/images/flowm_planning_final.png" style="max-width: 80%; height: auto;" width="900" alt="Downstream planning performance using different world models" />
+          </div>
+
+          <div class="toggle-container">
+            <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
+              <span class="arrow">▶</span>
+              Additional Details
+            </div>
+
+            <div class="toggle-content">
+              <h4 class="title is-5">MPC Planning Pseudocode</h4>
+              <div class="pseudocode-block">
+                <p class="pseudocode-line">repeat until episode ends:</p>
+                <p class="pseudocode-step">- initialize with real context</p>
+                <p class="pseudocode-step">- use the world model to generate predicted future observations for many action sequences of length H</p>
+                <p class="pseudocode-step">- compute predicted reward for each imagined rollout (amount of red pixels in the predicted observations)</p>
+                <p class="pseudocode-step">- choose the highest-scoring action sequence, and execute the first action in the real environment</p>
+                <p class="pseudocode-step">- observe the real next frame and update the model context</p>
+                <p class="pseudocode-step">- replan</p>
+              </div>
+
+              <h4 class="title is-5">Planning Rollout Visualizations</h4>
+              <p style="text-align: left;">
+                Rollouts of 70 generated frames during planning are shown below. We execute the actions chosen by the policy in the real environment after predicting what they will look like using
+                the world model. The real top-down map from the environment simulator after each action is shown on the left, the ground truth next observation from the simulator
+                after the action is taken is shown in the middle, and the generated next observation from the world model is shown on the right. We can see that the baselines may choose a
+                particular action due to a hallucinated red block or red frame, whereas FloWM stays consistent with its generations throughout the entire trajectory, similar to the pure
+                generation results. On the top down map, we can see that FloWM learns to follow the red block, while the others perform actions that are deemed good by the world model but
+                in reality do not maximize the objective.
+              </p>
+
+              <div style="text-align: center; margin-top: 28px">
+                <figure style="text-align:center;">
+                  <figcaption class="rollout-caption" style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                    FloWM Planning Rollout
+                  </figcaption>
+                  <video controls autoplay muted loop width="900" style="max-width:60%; height:auto;" src="./static/videos/planning_rollouts/flowm_planning_rollout.mp4"></video>
+                </figure>
+              </div>
+
+              <div style="text-align: center; margin-top: 28px">
+                <figure style="text-align:center;">
+                  <figcaption class="rollout-caption" style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                    DFoT Planning Rollout
+                  </figcaption>
+                  <video controls autoplay muted loop width="900" style="max-width:60%; height:auto;" src="./static/videos/planning_rollouts/dfot_planning_rollout.mp4"></video>
+                </figure>
+              </div>
+
+              <div style="text-align: center; margin-top: 28px">
+                <figure style="text-align:center;">
+                  <figcaption class="rollout-caption" style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                    DreamerV3 RSSM Planning Rollout
+                  </figcaption>
+                  <video controls autoplay muted loop width="900" style="max-width:60%; height:auto;" src="./static/videos/planning_rollouts/rssm_planning_rollout.mp4"></video>
+                </figure>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -793,10 +1045,13 @@
         <h3 class="title is-4">Equivariance Probe Experiment</h3>
         <div class="content has-text-justified">
           <p>
+            <strong class="emphasis-question">3D FloWM's representation space readily contains a representation of the Block World environment, and the encoder learns to be equivariant from the data.</strong>
+          </p>
+          <p>
             We train simple probe models on the activation spaces of FloWM and baselines on Dynamic Block World to see whether the representation
             readiliy contains the position of each block at each timestep. a) FloWM can make practically perfect predictions, even while the agent
             is moving around and the blocks are moving. This demonstrates the accuracy of the learned latent space. b) The DFoT baseline makes sporadic
-            predictions of each of the blocks, demonstrating its unprincipled representation space.
+            predictions of each of the blocks, reinforcing our understanding of its unstructured representation space.
           </p>
         </div>
 
@@ -833,7 +1088,7 @@
             We find that the probe can accurately predict the correct block position ~96% of the time for FloWM, while the accuracy prediction of the probe is
             less than 1% for DFoT. Further, the L2 distance between predicted positions, which can be seen as a proxy for testing whether the FloWM model has
             learned to be flow equivariant, is significantly lower (0.22) for FloWM, while remaining high for DFoT (2.36, much better than an untrained model
-            at 6.96, but significantly worse than FloWM). See the paper for more details!
+            at 6.96, but significantly worse than FloWM). This can represent a proxy for learned equivariance; see the paper for more details!
           </p>
         </div>
       </div>
@@ -849,11 +1104,20 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h3 class="title is-4">2D MNIST World Results</h3>
+        <h3 class="title is-4">2D MNIST World Prediction Results</h3>
 
         <div class="content has-text-justified">
           <p>
-            Below we provide full rollouts on the Dynamic Partially observed, Static partially observed, and dynamic fully observed splits of the 2D MNIST World Dataset.
+            <strong class="emphasis-question">FloWM easily learns to model partially observed 2D environments.</strong>
+          </p>
+          <p>
+            We present results here on a 2D partially observed MNIST World dataset. The world spawns multiple MNIST digits moving with different velocities. The observation window
+            is only a partial view of the entire world at any given time; the model is trained to predict what it will see next given an action that moves the observation window in some
+            direction. Below, we provide full rollouts on the Dynamic Partially Observed, Static Partially Observed, and Dynamic Fully Observed splits of the 2D MNIST World Dataset; these
+            ablations provide insight into which scenarios Flow Equivariance is useful or necessary.
+          </p>
+          <p>
+            On the main split, Dynamic Partially Observed, FloWM can remain consistent far beyond its training horizon of 20 frames, while DFoT hallucinates digit-like objects.
           </p>
         </div>
 
@@ -899,7 +1163,7 @@
             </div>
 
             <p style="font-size: 14px; text-align:center; margin-top: 4px;">
-              * Since the world has no velocity, the velocity channels are redundant and only add noise in this case.
+              * Since the digits are static, the velocity channels are redundant and only add noise in this case.
             </p>
 
             <div style="text-align: center; margin-top: 28px">
@@ -919,7 +1183,7 @@
               </figure>
             </div>
             <p style="font-size: 14px; text-align:center; margin-top: 4px;">
-              * For fully observable cases, the World View (GT) is same as Agent View (GT).
+              * For fully observable cases, the World View (GT) is the same as Agent View (GT).
             </p>
 
             <div class="row pt-4 pb-3 justify-content-center">
@@ -928,7 +1192,7 @@
                     Rollout Visualization on Dynamic Partially Observed MNIST World
                 </figcaption>
                 <br>
-                <div style="text-align: center;"><img src='./static/images/mnist_world_rollout_vis.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+                <div style="text-align: center;"><img src='./static/images/mnist_world_rollout_vis.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
               </div>
             </div>
 
@@ -953,6 +1217,29 @@
   </div>
 </section>
 
+<hr class="section-divider">
+
+<section class="section" id="dive-in-deeper">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h3 class="title is-4">Dive in Deeper</h3>
+        <div class="content has-text-justified resource-links">
+          <p>
+            We hope our work inspires further investigation into memory in world models! In support of open source science, we release all code, checkpoints, and datasets.
+          </p>
+          <div class="resource-card-grid">
+            <a class="resource-card" href="https://github.com/hlillemark/flowm" target="_blank">Training and Evaluation Code</a>
+            <a class="resource-card" href="https://huggingface.co/flowm123" target="_blank">Checkpoints</a>
+            <a class="resource-card" href="https://github.com/hlillemark/Miniworld/tree/flowm_release" target="_blank">Dataset Code</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
 
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
@@ -970,9 +1257,9 @@
 </section>
 
 
-<footer class="footer">
+<footer class="footer compact-footer">
   <div class="container">
-    <div class="content has-text-centered">
+    <!-- <div class="content has-text-centered">
       <a class="icon-link"
          href="https://arxiv.org/abs/2601.01075" target="_blank" class="external-link">
          <i class="fas fa-file-pdf"></i>
@@ -980,17 +1267,20 @@
       <a class="icon-link" href="https://github.com/hlillemark/flowm" target="_blank" class="external-link" disabled>
         <i class="fab fa-github"></i>
       </a>
+    </div> -->
+    <div class="content has-text-centered resource-links">
+      <a href="#top">↑ Return to the top</a>
     </div>
     <div class="columns is-centered">
       <div class="column is-8">
-        <div class="content">
+        <div class="content has-text-centered resource-links footer-attribution">
           <!-- <p>
             This website is licensed under a <a rel="license"
                                                 href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
             Commons Attribution-ShareAlike 4.0 International License</a>.
           </p> -->
           <p>
-            This website is based on the <a href="https://github.com/nerfies/nerfies.github.io">open source website code</a> from the Nerfies website.
+            This website is based on <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> and <a href="https://www.nicklashansen.com/mmbench2/">MMBench2</a>.
           </p>
         </div>
       </div>
