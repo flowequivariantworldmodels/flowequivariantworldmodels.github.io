@@ -95,12 +95,48 @@
   
     .toggle-header {
       cursor: pointer;
-      font-size: 20px;
-      font-weight: bold;
+      font-size: 18px;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
       gap: 8px;
       user-select: none;
+      color: #17452c;
+      background: #f3faf6;
+      border: 1px solid #9fc5ad;
+      border-radius: 999px;
+      padding: 10px 18px;
+      box-shadow: 0 1px 4px rgba(34, 99, 63, 0.1);
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .toggle-header:hover {
+      color: #0f3320;
+      background: #e5f2eb;
+      border-color: #5f9a75;
+    }
+
+    .toggle-container .toggle-container {
+      margin-top: 16px;
+    }
+
+    .toggle-container .toggle-container .toggle-header {
+      font-size: 16px;
+      color: #22633f;
+      background: #fbfefc;
+      border-color: #c9dfd1;
+      border-radius: 12px;
+      padding: 8px 14px;
+      box-shadow: none;
+    }
+
+    .overview-links a {
+      color: #22633f !important;
+      font-weight: inherit;
+    }
+
+    .overview-links a:hover {
+      text-decoration: underline;
     }
   
     .toggle-header .arrow {
@@ -111,16 +147,16 @@
     /* Hidden by default */
     .toggle-content {
       display: none;
-      margin-top: 12px;
+      margin-top: 16px;
     }
   
     /* Shown when container is open */
-    .toggle-container.open .toggle-content {
+    .toggle-container.open > .toggle-content {
       display: block;
     }
   
     /* Rotate arrow when open */
-    .toggle-container.open .toggle-header .arrow {
+    .toggle-container.open > .toggle-header .arrow {
       transform: rotate(90deg);
     }
   </style>
@@ -356,9 +392,9 @@
         </div>
         <br>
 
-        <div class="content has-text-centered is-size-5">
+        <div class="content has-text-centered is-size-5 overview-links">
             <p>
-            Below, we overview the <a href="#model-3d">3D FloWM model</a>, the <a href="#model-2d">2D FloWM model</a>,
+            Below, we overview the <a href="#model-comparison">FloWM model comparison</a>, the <a href="#model-3d">3D FloWM model</a>,
             present <a href="#results-3d-blockworld">3D Blockworld results</a>, and
             <a href="#results-2d-mnist">2D MNIST World results</a>.
             <!-- Optional: add , and <a href="#BibTeX">BibTeX</a>. -->
@@ -388,49 +424,96 @@
 <hr class="section-divider">
 
 
-<section class="section" id="model-3d">
+<section class="section" id="model-comparison">
   <div class="container is-max-desktop">
-
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">FloWM Model (3D)</h2>
-
-        <!-- Model comparison. -->
         <h3 class="title is-4">Model Comparison</h3>
         <div class="content has-text-justified">
           <p>
-            Comparison between different world modeling frameworks: a) Standard diffusion forcing uses a fixed length sliding window to generate video autoregressively. Frames must be evicted if they 
-        exceed the window. b) When there are information dependencies between past observations and the generated frame, without a memory mechanism, DFoT is not
-        able to generate consistently. c) Existing memory solutions are view-dependent, and cannot handle dynamic scenes, still resulting in inconsistent generation. d) In FloWM, past frames are 
-        remembered in the spatial latent memory and continually updated through FloWM's internal dynamics, resulting in consistent generation. 
+            Comparison between different world modeling frameworks: a) Standard diffusion forcing uses a fixed length sliding window to generate video autoregressively. Frames must be evicted if they
+            exceed the window. b) When there are information dependencies between past observations and the generated frame, without a memory mechanism, DFoT is not
+            able to generate consistently. c) Existing memory solutions are view-dependent, and cannot handle dynamic scenes, still resulting in inconsistent generation. d) In FloWM, past frames are
+            remembered in the spatial latent memory and continually updated through FloWM's internal dynamics, resulting in consistent generation.
           </p>
         </div>
 
         <div class="col-auto">
           <br>
-        <div style="text-align: center;"><img src='./static/images/flowm_model_comparisons.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
+          <div style="text-align: center;"><img src='./static/images/flowm_model_comparisons.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
         </div>
-
-        <br>
-
-
-        <!-- Model diagram -->
-        <h3 class="title is-4">FloWM Model Diagram</h3>
-        <div class="content has-text-justified">
-          <p>
-              FloWM Recurrence relation in 3D: a) Information passes from the image observations to the hidden state through a ViT encoder. b) The new updates are combined with the existing hidden state, and 
-              the action and internal flows roll the hidden state to the next timestep. c) The updated hidden state is used to predict the next timestep observation.
-          </p>
-        </div>
-
-        <div class="col-auto">
-          <br>
-        <div style="text-align: center;"><img src='./static/images/flowm_3d_model.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
-        </div>
-
       </div>
     </div>
+  </div>
+</section>
 
+
+<hr class="section-divider">
+
+
+<section class="section" id="preliminaries">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h3 class="title is-4">Preliminaries</h3>
+        <div class="content has-text-justified">
+          <p>
+            TODO: Add text block about equivariance.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<hr class="section-divider">
+
+
+<section class="section" id="model-2d">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h3 class="title is-4">2D FloWM Model Diagram</h3>
+        <div class="content has-text-justified">
+          <p>
+            a) FloWM Recurrence relation in 2D. Velocity channels are plotted as rows. At each timestep, the internal flow and action flow compose and act upon the latent memory map representation,
+            which is used to predict the observation at the next timestep. b) Rollout error over time, for FloWM and ablations, and baselines. c) Training loss across batches, demonstrating how the
+            full equivariance allows the model to learn significantly quicker.
+          </p>
+        </div>
+
+        <div class="col-auto">
+          <br>
+          <div style="text-align: center;"><img src='./static/images/model.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<hr class="section-divider">
+
+
+<section class="section" id="model-3d">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h3 class="title is-4">3D FloWM Model Diagram</h3>
+        <div class="content has-text-justified">
+          <p>
+            FloWM Recurrence relation in 3D: a) Information passes from the image observations to the hidden state through a ViT encoder. b) The new updates are combined with the existing hidden state, and
+            the action and internal flows roll the hidden state to the next timestep. c) The updated hidden state is used to predict the next timestep observation.
+          </p>
+        </div>
+
+        <div class="col-auto">
+          <br>
+          <div style="text-align: center;"><img src='./static/images/flowm_3d_model.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -440,122 +523,15 @@
 
 <section class="section" id="results-3d-blockworld">
   <div class="container is-max-desktop">
-
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">3D Blockworld Results</h2>
+        <h3 class="title is-4">3D Blockworld Results</h3>
 
         <div class="content has-text-justified">
           <p>
-              Below we provide full rollouts on the Dynamic, Textured, and Static splits of the 3D Blockworld Dataset
+            Below we provide full rollouts on the Dynamic, Textured, and Static splits of the 3D Blockworld Dataset.
           </p>
         </div>
-
-        <!-- Model comparison. -->
-        <h3 class="title is-4">Dynamic Blockworld Rollouts</h3>
-
-        <div style="text-align: center; margin-top: 28px">
-          <figure style="text-align:center;">
-            <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-              3D Dynamic Block World Rollout #1
-            </figcaption>
-            <video
-              controls
-              autoplay
-              muted
-              loop
-              width="900"
-              style="max-width:100%; height:auto;"
-              src="./static/videos/teaser.mov"
-            ></video>
-          </figure>
-        </div>
-
-        <div class="toggle-container">
-          <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
-            <span class="arrow">▶</span>
-            Additional high PSNR Rollouts on 3D Dynamic Blockworld
-          </div>
-
-          <div class="toggle-content">
-            <div style="text-align: center; margin-top: 28px">
-              <figure style="text-align:center;">
-                <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-                  3D Dynamic Block World Rollout #2
-                </figcaption>
-                <video
-                  controls
-                  autoplay
-                  muted
-                  loop
-                  width="900"
-                  style="max-width:100%; height:auto;"
-                  src="./static/videos/blockworld_rollouts/website_best_003_slow.mov"
-                ></video>
-              </figure>
-            </div>
-
-            <div style="text-align: center; margin-top: 28px">
-              <figure style="text-align:center;">
-                <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-                  3D Dynamic Block World Rollout #3
-                </figcaption>
-                <video
-                  controls
-                  autoplay
-                  muted
-                  loop
-                  width="900"
-                  style="max-width:100%; height:auto;"
-                  src="./static/videos/blockworld_rollouts/website_best_005_slow.mov"
-                ></video>
-              </figure>
-            </div>
-          </div>
-        </div>
-
-        <br>
-
-
-        <div class="toggle-container">
-          <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
-            <span class="arrow">▶</span>
-            Additional varying PSNR Rollouts on 3D Dynamic Block World:
-          </div>
-  
-          <div class="toggle-content">
-  
-            <p style="font-size: 16px; text-align:center; margin-top: 4px;">
-              We visualize failure cases of our model, in comparison to DFoT and DFoT SSM by visualizing low PSNR rollouts:
-            </p>
-            <br>
-  
-            <div style="text-align: center;">
-              <figure style="text-align:center;">
-                <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-                  3D Dynamic Block World Rollout (Medium PSNR)
-                </figcaption>
-                  <video controls muted="muted" style="max-width: 100%; height: auto;" width="900" src="./static/videos/blockworld_rollouts/website_med_005_slow.mov" autoplay="autoplay" loop></video>
-              </figure>
-            </div>
-            <br>
-        
-            <div style="text-align: center;">
-              <figure style="text-align:center;">
-                <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-                  3D Dynamic Block World Rollout (Low PSNR)
-                </figcaption>
-                  <video controls muted="muted" style="max-width: 100%; height: auto;" width="900" src="./static/videos/blockworld_rollouts/website_worst_008_slow.mov" autoplay="autoplay" loop></video>
-              </figure>
-            </div>
-           
-          </div>
-        </div>
-
-        <br>
-        <br>
-
-        <h3 class="title is-4">Textured Blockworld Rollouts</h3>
 
         <div style="text-align: center; margin-top: 28px">
           <figure style="text-align:center;">
@@ -577,146 +553,248 @@
         <div class="toggle-container">
           <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
             <span class="arrow">▶</span>
-            Additional Rollouts on Textured Dynamic Blockworld
+            Additional Results
           </div>
 
           <div class="toggle-content">
-            <div style="text-align: center; margin-top: 28px">
-              <figure style="text-align:center;">
-                <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-                  Textured Dynamic Blockworld Rollout #2
-                </figcaption>
-                <video
-                  controls
-                  autoplay
-                  muted
-                  loop
-                  width="900"
-                  style="max-width:100%; height:auto;"
-                  src="./static/videos/blockworld_tex_rollouts/blockworld_tex_002_slow.mov"
-                ></video>
-              </figure>
-            </div>
+            <div class="toggle-container">
+              <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
+                <span class="arrow">▶</span>
+                Additional Textured Dynamic Blockworld Rollouts
+              </div>
 
-            <div style="text-align: center; margin-top: 28px">
-              <figure style="text-align:center;">
-                <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
-                  Textured Dynamic Blockworld Rollout #3
-                </figcaption>
-                <video
-                  controls
-                  autoplay
-                  muted
-                  loop
-                  width="900"
-                  style="max-width:100%; height:auto;"
-                  src="./static/videos/blockworld_tex_rollouts/blockworld_tex_003_slow.mov"
-                ></video>
-              </figure>
-            </div>
-          </div>
-        </div>
+              <div class="toggle-content">
+                <div style="text-align: center; margin-top: 28px">
+                  <figure style="text-align:center;">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                      Textured Dynamic Blockworld Rollout #2
+                    </figcaption>
+                    <video
+                      controls
+                      autoplay
+                      muted
+                      loop
+                      width="900"
+                      style="max-width:100%; height:auto;"
+                      src="./static/videos/blockworld_tex_rollouts/blockworld_tex_002_slow.mov"
+                    ></video>
+                  </figure>
+                </div>
 
-        <br>
-        <br>
-
-        <h3 class="title is-4">Frame-wise rollout visualizations and result tables</h3>
-
-        <div class="toggle-container">
-          <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
-            <span class="arrow">▶</span>
-            Frame-wise Rollout Visualizations
-          </div>
-
-          <div class="toggle-content">
-
-            <div class="row pt-4 pb-3 justify-content-center">
-              <div class="col-auto">
-                <figcaption style="font-size:20px; font-weight:bold; margin-top:20px;">
-                    Rollout Visualization on Dynamic Textured Blockworld.
-                </figcaption>
-                <br>
-              <div style="text-align: center;"><img src='./static/images/blockworld_tex_rollouts.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+                <div style="text-align: center; margin-top: 28px">
+                  <figure style="text-align:center;">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                      Textured Dynamic Blockworld Rollout #3
+                    </figcaption>
+                    <video
+                      controls
+                      autoplay
+                      muted
+                      loop
+                      width="900"
+                      style="max-width:100%; height:auto;"
+                      src="./static/videos/blockworld_tex_rollouts/blockworld_tex_003_slow.mov"
+                    ></video>
+                  </figure>
+                </div>
               </div>
             </div>
-      
-            <div class="col" style="text-align: center; max-width: 900px; margin: 0 auto; margin-top: 16px">
-              Note that FloWM remains consistent while SSM and DFoT hallucinate.
-            </div>
-      
-            <!-- standard blockworld -->
-            <div class="row pt-4 pb-3 justify-content-center">
-              <div class="col-auto">
-                <figcaption style="font-size:20px; font-weight:bold; margin-top:20px;">
-                    Rollout Visualization on Dynamic Blockworld.
-                </figcaption>
-                <br>
-              <div style="text-align: center;"><img src='./static/images/blockworld_dynamic_rollouts.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+
+            <div class="toggle-container">
+              <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
+                <span class="arrow">▶</span>
+                Dynamic Blockworld Rollouts
+              </div>
+
+              <div class="toggle-content">
+                <div style="text-align: center; margin-top: 28px">
+                  <figure style="text-align:center;">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                      3D Dynamic Block World Rollout #1
+                    </figcaption>
+                    <video
+                      controls
+                      autoplay
+                      muted
+                      loop
+                      width="900"
+                      style="max-width:100%; height:auto;"
+                      src="./static/videos/teaser.mov"
+                    ></video>
+                  </figure>
+                </div>
+
+                <div style="text-align: center; margin-top: 28px">
+                  <figure style="text-align:center;">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                      3D Dynamic Block World Rollout #2
+                    </figcaption>
+                    <video
+                      controls
+                      autoplay
+                      muted
+                      loop
+                      width="900"
+                      style="max-width:100%; height:auto;"
+                      src="./static/videos/blockworld_rollouts/website_best_003_slow.mov"
+                    ></video>
+                  </figure>
+                </div>
+
+                <div style="text-align: center; margin-top: 28px">
+                  <figure style="text-align:center;">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                      3D Dynamic Block World Rollout #3
+                    </figcaption>
+                    <video
+                      controls
+                      autoplay
+                      muted
+                      loop
+                      width="900"
+                      style="max-width:100%; height:auto;"
+                      src="./static/videos/blockworld_rollouts/website_best_005_slow.mov"
+                    ></video>
+                  </figure>
+                </div>
               </div>
             </div>
-            <div class="col" style="text-align: center; max-width: 900px; margin: 0 auto; margin-top: 16px">
-              Note that FloWM remains consistent while SSM and DFoT hallucinate. Ablations also begin predicting poor visual results.
-            </div>
 
-          </div>
-        </div>
+            <div class="toggle-container">
+              <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
+                <span class="arrow">▶</span>
+                Dynamic Blockworld Rollouts with Varying PSNR
+              </div>
 
-        <br>
-
-
-        <div class="toggle-container">
-          <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
-            <span class="arrow">▶</span>
-            Blockworld Results Tables
-          </div>
-
-          <div class="toggle-content">
-            <div class="row pt-4 pb-3 justify-content-center">
-              <p style="font-size:20px; font-weight:bold; text-align:center; margin-top:20px;" class="mt-4">Validation Metrics on 3D Dynamic Block World</p>
-              <div style="text-align: center; max-width: 900px">
-                <img src='./static/images/blockworld_results_table_new.png' style="max-width: 100%; height: auto;" width="600" alt='missing' />
-                <p style="font-size: 16px; text-align: center; margin-top: 8px; max-width: 900px">
-                  Columns show mean metrics (MSE, PSNR, SSIM) of generated frames over the first 70 frames (matches
-                  training distribution) vs. 210 frames (length generalization). 70 frames are passed in as context.
+              <div class="toggle-content">
+                <p style="font-size: 16px; text-align:center; margin-top: 4px;">
+                  We visualize failure cases of our model, in comparison to DFoT and DFoT SSM by visualizing low PSNR rollouts:
                 </p>
-              </div>
+                <br>
 
-              <p style="font-size:20px; font-weight:bold; text-align:center; margin-top:20px;" class="mt-4">Validation Metrics on 3D Dynamic Textured Block World</p>
-              <div style="text-align: center; max-width: 900px">
-                <img src='./static/images/blockworld_tex_results_table_new.png' style="max-width: 100%; height: auto;" width="600" alt='missing' />
-                <p style="font-size: 16px; text-align: center; margin-top: 8px; max-width: 900px">
-                  Columns show mean metrics (MSE, PSNR, SSIM) of 70 generated frames vs 210 frames, with 70 frames passed in as context.
-                </p>
+                <div style="text-align: center;">
+                  <figure style="text-align:center;">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                      3D Dynamic Block World Rollout (Medium PSNR)
+                    </figcaption>
+                      <video controls muted="muted" style="max-width: 100%; height: auto;" width="900" src="./static/videos/blockworld_rollouts/website_med_005_slow.mov" autoplay="autoplay" loop></video>
+                  </figure>
+                </div>
+                <br>
+
+                <div style="text-align: center;">
+                  <figure style="text-align:center;">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-bottom:8px;">
+                      3D Dynamic Block World Rollout (Low PSNR)
+                    </figcaption>
+                      <video controls muted="muted" style="max-width: 100%; height: auto;" width="900" src="./static/videos/blockworld_rollouts/website_worst_008_slow.mov" autoplay="autoplay" loop></video>
+                  </figure>
+                </div>
               </div>
             </div>
 
+            <div class="toggle-container">
+              <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
+                <span class="arrow">▶</span>
+                Frame-wise Rollout Visualizations
+              </div>
+
+              <div class="toggle-content">
+                <div class="row pt-4 pb-3 justify-content-center">
+                  <div class="col-auto">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-top:20px;">
+                        Rollout Visualization on Dynamic Textured Blockworld.
+                    </figcaption>
+                    <br>
+                    <div style="text-align: center;"><img src='./static/images/blockworld_tex_rollouts.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+                  </div>
+                </div>
+
+                <div class="col" style="text-align: center; max-width: 900px; margin: 0 auto; margin-top: 16px">
+                  Note that FloWM remains consistent while SSM and DFoT hallucinate.
+                </div>
+
+                <div class="row pt-4 pb-3 justify-content-center">
+                  <div class="col-auto">
+                    <figcaption style="font-size:20px; font-weight:bold; margin-top:20px;">
+                        Rollout Visualization on Dynamic Blockworld.
+                    </figcaption>
+                    <br>
+                    <div style="text-align: center;"><img src='./static/images/blockworld_dynamic_rollouts.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+                  </div>
+                </div>
+                <div class="col" style="text-align: center; max-width: 900px; margin: 0 auto; margin-top: 16px">
+                  Note that FloWM remains consistent while SSM and DFoT hallucinate. Ablations also begin predicting poor visual results.
+                </div>
+              </div>
+            </div>
+
+            <div class="toggle-container">
+              <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
+                <span class="arrow">▶</span>
+                Blockworld Results Tables
+              </div>
+
+              <div class="toggle-content">
+                <div class="row pt-4 pb-3 justify-content-center">
+                  <p style="font-size:20px; font-weight:bold; text-align:center; margin-top:20px;" class="mt-4">Validation Metrics on 3D Dynamic Block World</p>
+                  <div style="text-align: center; max-width: 900px">
+                    <img src='./static/images/blockworld_results_table_new.png' style="max-width: 100%; height: auto;" width="600" alt='missing' />
+                    <p style="font-size: 16px; text-align: center; margin-top: 8px; max-width: 900px">
+                      Columns show mean metrics (MSE, PSNR, SSIM) of generated frames over the first 70 frames (matches
+                      training distribution) vs. 210 frames (length generalization). 70 frames are passed in as context.
+                    </p>
+                  </div>
+
+                  <p style="font-size:20px; font-weight:bold; text-align:center; margin-top:20px;" class="mt-4">Validation Metrics on 3D Dynamic Textured Block World</p>
+                  <div style="text-align: center; max-width: 900px">
+                    <img src='./static/images/blockworld_tex_results_table_new.png' style="max-width: 100%; height: auto;" width="600" alt='missing' />
+                    <p style="font-size: 16px; text-align: center; margin-top: 8px; max-width: 900px">
+                      Columns show mean metrics (MSE, PSNR, SSIM) of 70 generated frames vs 210 frames, with 70 frames passed in as context.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-
       </div>
     </div>
-
   </div>
 </section>
 
 
+<hr class="section-divider">
+
+
+<section class="section" id="planning-experiment">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h3 class="title is-4">Planning Experiment</h3>
+        <div class="content has-text-justified">
+          <p>
+            TODO: Add text block about planning expt.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <hr class="section-divider">
 
-<section class="section" id="model-2d">
-  <div class="container is-max-desktop">
 
+<section class="section" id="equivariance-probe-experiment">
+  <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">Activation Probe Experiments</h2>
-
-        <!-- Model diagram -->
-        <!-- <h3 class="title is-4">FloWM Model Diagram</h3> -->
+        <h3 class="title is-4">Equivariance Probe Experiment</h3>
         <div class="content has-text-justified">
           <p>
-            We train simple probe models on the activation spaces of FloWM and baselines on Dynamic Block World to see whether the representation 
-            readiliy contains the position of each block at each timestep. a) FloWM can make practically perfect predictions, even while the agent 
+            We train simple probe models on the activation spaces of FloWM and baselines on Dynamic Block World to see whether the representation
+            readiliy contains the position of each block at each timestep. a) FloWM can make practically perfect predictions, even while the agent
             is moving around and the blocks are moving. This demonstrates the accuracy of the learned latent space. b) The DFoT baseline makes sporadic
             predictions of each of the blocks, demonstrating its unprincipled representation space.
           </p>
@@ -724,28 +802,26 @@
 
         <div class="col-auto">
           <br>
-        <div style="text-align: center;"><img src='./static/images/top_down_probe_combined.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
+          <div style="text-align: center;"><img src='./static/images/top_down_probe_combined.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
         </div>
 
         <div class="toggle-container">
-          <div class="toggle-header" role="button" tabindex="20" aria-expanded="false">
+          <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
             <span class="arrow">▶</span>
             Additional visualization of the probe rollout over time
           </div>
           <div class="toggle-content">
             <div class="content has-text-justified">
               <p>
-                The same example rollout of predicted spatial positions by the probe models in Dynamic Block World is visualized here as a prediction 
+                The same example rollout of predicted spatial positions by the probe models in Dynamic Block World is visualized here as a prediction
                 through time. a) FloWM can make predictions accurately through time, while b) DFoT cannot.
               </p>
             </div>
-    
+
             <div class="col-auto">
               <br>
-            <div style="text-align: center;"><img src='./static/images/x_and_z_probe_combined.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
+              <div style="text-align: center;"><img src='./static/images/x_and_z_probe_combined.png' style="max-width: 100%; height: auto;" width="900" alt='missing' /></div>
             </div>
-            
-            
           </div>
         </div>
 
@@ -754,75 +830,32 @@
 
         <div class="content has-text-justified">
           <p>
-            We find that the probe can accurately predict the correct block position ~96% of the time for FloWM, while the accuracy prediction of the probe is 
+            We find that the probe can accurately predict the correct block position ~96% of the time for FloWM, while the accuracy prediction of the probe is
             less than 1% for DFoT. Further, the L2 distance between predicted positions, which can be seen as a proxy for testing whether the FloWM model has
-            learned to be flow equivariant, is significantly lower (0.22) for FloWM, while remaining high for DFoT (2.36, much better than an untrained model 
+            learned to be flow equivariant, is significantly lower (0.22) for FloWM, while remaining high for DFoT (2.36, much better than an untrained model
             at 6.96, but significantly worse than FloWM). See the paper for more details!
           </p>
         </div>
-
       </div>
     </div>
-
   </div>
 </section>
 
 
-
-
 <hr class="section-divider">
-
-
-
-<section class="section" id="model-2d">
-  <div class="container is-max-desktop">
-
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">FloWM Model (2D)</h2>
-
-        <!-- Model diagram -->
-        <h3 class="title is-4">FloWM Model Diagram</h3>
-        <div class="content has-text-justified">
-          <p>
-            a) FloWM Recurrence relation in 2D. Velocity channels are plotted as rows. At each timestep, the internal flow and action flow compose and act upon the latent memory map representation, 
-            which is used to predict the observation at the next timestep. b) Rollout error over time, for FloWM and ablations, and baselines. c) Training loss across batches, demonstrating how the 
-            full equivariance allows the model to learn significantly quicker.
-          </p>
-        </div>
-
-        <div class="col-auto">
-          <br>
-        <div style="text-align: center;"><img src='./static/images/model.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-
-<hr class="section-divider">
-
 
 
 <section class="section" id="results-2d-mnist">
   <div class="container is-max-desktop">
-
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">2D MNIST World Results</h2>
+        <h3 class="title is-4">2D MNIST World Results</h3>
 
         <div class="content has-text-justified">
           <p>
-              Below we provide full rollouts on the Dynamic Partially observed, Static partially observed, and dynamic fully observed splits of the 2D MNIST World Dataset.
+            Below we provide full rollouts on the Dynamic Partially observed, Static partially observed, and dynamic fully observed splits of the 2D MNIST World Dataset.
           </p>
         </div>
-
-        <!-- Model comparison. -->
-        <h3 class="title is-4">Rollouts</h3>
 
         <div style="text-align: center; margin-top: 28px">
           <figure style="text-align:center;">
@@ -844,7 +877,7 @@
         <div class="toggle-container">
           <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
             <span class="arrow">▶</span>
-            Rollouts on Static and Dynamic Fully Observed splits
+            Additional Results
           </div>
 
           <div class="toggle-content">
@@ -864,9 +897,9 @@
                 ></video>
               </figure>
             </div>
-            
+
             <p style="font-size: 14px; text-align:center; margin-top: 4px;">
-              * Since the world has no velocity, the velocity channels are redundant and only add noise in this case. 
+              * Since the world has no velocity, the velocity channels are redundant and only add noise in this case.
             </p>
 
             <div style="text-align: center; margin-top: 28px">
@@ -888,21 +921,6 @@
             <p style="font-size: 14px; text-align:center; margin-top: 4px;">
               * For fully observable cases, the World View (GT) is same as Agent View (GT).
             </p>
-          </div>
-        </div>
-
-        <br>
-        <br>
-
-        <h3 class="title is-4">Frame-wise rollout visualizations and result tables</h3>
-
-        <div class="toggle-container">
-          <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
-            <span class="arrow">▶</span>
-            Frame-wise Rollout Visualizations
-          </div>
-
-          <div class="toggle-content">
 
             <div class="row pt-4 pb-3 justify-content-center">
               <div class="col-auto">
@@ -910,27 +928,14 @@
                     Rollout Visualization on Dynamic Partially Observed MNIST World
                 </figcaption>
                 <br>
-              <div style="text-align: center;"><img src='./static/images/mnist_world_rollout_vis.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
+                <div style="text-align: center;"><img src='./static/images/mnist_world_rollout_vis.png' style="max-width: 80%; height: auto;" width="900" alt='missing' /></div>
               </div>
             </div>
-      
+
             <div class="col" style="text-align: center; max-width: 900px; margin: 0 auto; margin-top: 16px">
               Note that FloWM remains consistent while SSM and DFoT hallucinate or fade to black. The agent view is a partial view of the whole world view.
             </div>
 
-          </div>
-        </div>
-
-        <br>
-
-
-        <div class="toggle-container">
-          <div class="toggle-header" role="button" tabindex="0" aria-expanded="false">
-            <span class="arrow">▶</span>
-            MNIST World Results Table
-          </div>
-
-          <div class="toggle-content">
             <div class="row pt-4 pb-3 justify-content-center">
               <p style="font-size:20px; font-weight:bold; text-align:center;" class="mt-4">Validation Metrics on 2D Dynamic Partially Observable MNIST World</p>
               <div style="text-align: center; max-width: 900px">
@@ -941,18 +946,12 @@
                 </p>
               </div>
             </div>
-
           </div>
         </div>
-
-
       </div>
     </div>
-
   </div>
 </section>
-
-
 
 
 <section class="section" id="BibTeX">
